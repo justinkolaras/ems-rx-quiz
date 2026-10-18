@@ -135,7 +135,7 @@
 
   // ---------- Storage ----------
   const KEY = 'rxrapid.v1';
-  const DEFAULT_SETTINGS = { topics: TOPICS.map((t) => t.id), systems: Object.keys(RX.SYSTEMS), weakOnly: false, goal: 50, auto: true, unlockAll: false };
+  const DEFAULT_SETTINGS = { topics: TOPICS.map((t) => t.id), systems: Object.keys(RX.SYSTEMS), weakOnly: false, goal: 50, autoNext: false, unlockAll: false };
   function freshState() {
     return { v: 1, created: Date.now(), cards: {}, stats: { answered: 0, correct: 0, streak: 0, best: 0, byTopic: {}, bySys: {}, byDrug: {}, days: {} }, path: { lessons: {}, tests: {} }, settings: { ...DEFAULT_SETTINGS }, savedAt: 0 };
   }
@@ -889,7 +889,7 @@
     el.explain.hidden = false;
     el.next.disabled = false;
     if (navigator.vibrate && !ok) { try { navigator.vibrate(40); } catch (e) { /* ignore */ } }
-    if (ok && S.settings.auto && !finished) startAuto();
+    if (ok && S.settings.autoNext && !finished) startAuto();
     else el.explain.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     renderTop();
     renderSessBar();
@@ -1189,7 +1189,7 @@
 
   async function renderSettings() {
     $('#goalInput').value = S.settings.goal;
-    $('#autoAdv').checked = !!S.settings.auto;
+    $('#autoAdv').checked = !!S.settings.autoNext;
     $('#unlockAll').checked = !!S.settings.unlockAll;
     let persisted = false;
     try { persisted = !!(navigator.storage && navigator.storage.persisted && await navigator.storage.persisted()); } catch (e) { /* ignore */ }
@@ -1201,7 +1201,7 @@
       : `<span>⚠️</span><span><b>This browser is blocking storage</b> (private mode?). Progress won't survive closing the tab — download a backup.</span>`;
   }
   $('#goalInput').addEventListener('change', (e) => { const v = Math.max(5, Math.min(500, parseInt(e.target.value, 10) || 50)); S.settings.goal = v; e.target.value = v; save(); renderTop(); });
-  $('#autoAdv').addEventListener('change', (e) => { S.settings.auto = e.target.checked; save(); });
+  $('#autoAdv').addEventListener('change', (e) => { S.settings.autoNext = e.target.checked; save(); });
   $('#unlockAll').addEventListener('change', (e) => { S.settings.unlockAll = e.target.checked; save(); });
   $('#exportBtn').addEventListener('click', () => {
     const blob = new Blob([JSON.stringify(S, null, 1)], { type: 'application/json' });

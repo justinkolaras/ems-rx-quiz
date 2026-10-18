@@ -1,5 +1,5 @@
 // Network-first service worker: always fresh when online, still works offline.
-const CACHE = 'rxrapid-v2';
+const CACHE = 'rxrapid-v3';
 const FILES = ['./', 'index.html', 'styles.css', 'app.js', 'data.js', 'lessons.js', 'manifest.webmanifest', 'icon.svg', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', (e) => {
